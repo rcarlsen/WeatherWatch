@@ -88,14 +88,20 @@ void handle_init(AppContextRef ctx) {
 	// Add time layer.
 	time_layer_init(&time_layer, GPoint(0, 0));
 	layer_add_child(&window.layer, &time_layer.layer);
+
 	// Set initial time.
 	PblTm time;
 	get_time(&time);
 	time_layer_set_time(&time_layer, time);
-	// Add weather layer
+	
+  // Add weather layer
 	weather_layer_init(&weather_layer, GPoint(0, 100));
 	layer_add_child(&window.layer, &weather_layer.layer);
 	
+  // immediately update the weather layer text
+  text_layer_set_text(&weather_layer.temp_layer, "-");
+  weather_layer_set_icon(&weather_layer, WEATHER_ICON_NO_WEATHER);
+
 	http_register_callbacks((HTTPCallbacks){.failure=failed,.success=success,.reconnect=reconnect,.location=location}, (void*)ctx);
 	
 	// Request weather information in a second.
